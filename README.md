@@ -1,4 +1,4 @@
-# [Markusword.de](https://www.markusword.de)
+# [markusword.de](https://www.markusword.de)
 
 Personal blog and portfolio — cyberanalyst, OSINT specialist, software developer.
 
