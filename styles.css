@@ -677,12 +677,24 @@ footer {
     font-size: 1.15rem;
 }
 
+.about-layout {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
 .about-avatar {
     width: 250px;
     height: 380px;
     border-radius: 12px;
     object-fit: cover;
-    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.about-text {
+    flex: 1;
+    min-width: 0;
 }
 
 .search-page {
