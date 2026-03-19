@@ -5,21 +5,14 @@
     <link>https://www.markusword.de</link>
     <description>MD - Developer, Designer, Creator</description>
     <language>en</language>
-    <lastBuildDate>Fri, 13 Mar 2026 00:17:11 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 19 Mar 2026 05:42:16 GMT</lastBuildDate>
     <atom:link href="https://www.markusword.de/rss.xml" rel="self" type="application/rss+xml"/>
     <item>
-      <title>THIS IS A HEADLINE for this post</title>
-      <link>https://www.markusword.de/post/2026/01/this-is-a-headline-for-this-post</link>
-      <guid isPermaLink="true">https://www.markusword.de/post/2026/01/this-is-a-headline-for-this-post</guid>
-      <description><![CDATA[This is a teaser text. Lets see how long the post needs to update on gh pages]]></description>
-      <pubDate>Thu, 01 Jan 2026 10:30:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>TEST2</title>
-      <link>https://www.markusword.de/post/2026/01/test2</link>
-      <guid isPermaLink="true">https://www.markusword.de/post/2026/01/test2</guid>
-      <description><![CDATA[This is a teaser text. Lets see how long the post needs to update on gh pages]]></description>
-      <pubDate>Thu, 01 Jan 2026 10:30:00 GMT</pubDate>
+      <title>Conversations About AI: Policing, Privacy, and the Future We’re Ignoring</title>
+      <link>https://www.markusword.de/post/2025/12/conversations-about-ai-policing-privacy-and-the-future-were-ignoring</link>
+      <guid isPermaLink="true">https://www.markusword.de/post/2025/12/conversations-about-ai-policing-privacy-and-the-future-were-ignoring</guid>
+      <description><![CDATA[From helping detectives solve cold cases to personal assistants analyzing our daily routines, AI holds enormous potential but only if we rethink our approach to technology, privacy, and responsibility. This isn’t just about efficiency. It’s about preparing society for a profound shift in how we live, work, and protect ourselves in an AI-driven world.]]></description>
+      <pubDate>Mon, 08 Dec 2025 06:30:00 GMT</pubDate>
     </item>
   </channel>
 </rss>
