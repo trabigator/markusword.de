@@ -631,6 +631,18 @@ footer {
     margin: 1em 0;
 }
 
+.markdown-content ul {
+    list-style: disc;
+}
+
+.markdown-content ul ul {
+    list-style: circle;
+}
+
+.markdown-content ol {
+    list-style: decimal;
+}
+
 .markdown-content li {
     margin-bottom: 0.5em;
 }
