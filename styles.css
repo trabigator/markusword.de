@@ -677,6 +677,14 @@ footer {
     font-size: 1.15rem;
 }
 
+.about-avatar {
+    width: 250px;
+    height: 380px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
 .search-page {
     max-width: 860px;
     margin: 0 auto;
