@@ -254,7 +254,11 @@ main {
 .avatar-link {
     display: block;
     margin: 0 auto;
-    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.avatar {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1);
 }
 
 .avatar-link:hover .avatar {
