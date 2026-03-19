@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>(function(){var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.setAttribute("data-theme","dark");}})();</script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-+HMBJoeKaKxVa9408/956eni2EsOABhFgl+DxfxIeEg=' 'sha256-XqbVS4YORCWTwL37RzrpuXNMM5StpCb5SRo1KwkmOYA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-XqbVS4YORCWTwL37RzrpuXNMM5StpCb5SRo1KwkmOYA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
     <title>Markus Dröws</title>
     <meta name="description" content="Markus Dröws - Cyberanalyst, OSINT Specialist, Software Developer">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -15,6 +15,8 @@
     <script src="/js/purify.min.js" defer></script>
     <script src="/js/posts.js" defer></script>
     <script src="/js/components.js" defer></script>
+    <script src="/js/init.js" defer></script>
+    <script src="/js/page-home.js" defer></script>
     <script src="/script.js" defer></script>
     <link rel="stylesheet" href="/styles.css">
     <style>
@@ -131,14 +133,5 @@ stroke-linecap="round" stroke-linejoin="round">
 
     <footer></footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const postsContainer = document.querySelector('#recent-posts ul');
-            if (postsContainer) {
-                const posts = await PostLoader.fetchPosts();
-                PostLoader.renderPostList(posts.slice(0, 7), postsContainer);
-            }
-        });
-    </script>
 </body>
 </html>

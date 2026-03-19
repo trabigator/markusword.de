@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>(function(){var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.setAttribute("data-theme","dark");}})();</script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-wkVlJ4XDjmibJqkMlnkNSRueSrKpaDrqmI5fU1t88bw=' 'sha256-XqbVS4YORCWTwL37RzrpuXNMM5StpCb5SRo1KwkmOYA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-XqbVS4YORCWTwL37RzrpuXNMM5StpCb5SRo1KwkmOYA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self';">
     <title>Tag - MD</title>
     <meta name="description" content="Posts tagged with">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -15,6 +15,8 @@
     <script src="/js/purify.min.js" defer></script>
     <script src="/js/posts.js" defer></script>
     <script src="/js/components.js" defer></script>
+    <script src="/js/init.js" defer></script>
+    <script src="/js/page-tags.js" defer></script>
     <script src="/script.js" defer></script>
     <link rel="stylesheet" href="/styles.css">
     <style>
@@ -36,91 +38,7 @@
 
     <footer></footer>
 
-    <script>
-        const POSTS_PER_PAGE = 10;
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            const pathname = window.location.pathname;
-            const pathParts = pathname.split('/').filter(Boolean);
-            
-            let tag = null;
-            
-            const tagIndex = pathParts.indexOf('tags');
-            if (tagIndex !== -1 && pathParts[tagIndex + 1] && pathParts[tagIndex + 1] !== 'index.html') {
-                tag = decodeURIComponent(pathParts[tagIndex + 1]);
-            }
-            
-            if (!tag) {
-                const urlParams = new URLSearchParams(window.location.search);
-                tag = urlParams.get('tag');
-            }
-
-            if (!tag) {
-                document.getElementById('tag-headline').textContent = 'Tag Not Found';
-                document.getElementById('tag-description').textContent = 'No tag specified.';
-                return;
-            }
-
-            document.title = `Tag: ${tag} - MD`;
-            document.getElementById('tag-headline').textContent = `Tag: ${tag}`;
-            document.getElementById('tag-description').textContent = `All the articles with the tag "${tag}".`;
-
-            const posts = await PostLoader.fetchPosts();
-            const taggedPosts = posts.filter(post => post.tags && post.tags.includes(tag));
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            let currentPage = parseInt(urlParams.get('page')) || 1;
-            
-            const totalPages = Math.ceil(taggedPosts.length / POSTS_PER_PAGE);
-            currentPage = Math.max(1, Math.min(currentPage, totalPages));
-            
-            const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-            const pagePosts = taggedPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
-
-            const postsContainer = document.getElementById('tag-posts');
-            if (!pagePosts.length) {
-                postsContainer.innerHTML = '<li class="no-posts">No posts found with this tag.</li>';
-            } else {
-                postsContainer.innerHTML = pagePosts.map(post => `
-                    <li>
-                        <div class="post-item">
-                            <a href="../post/${encodeURIComponent(post.year)}/${encodeURIComponent(post.month)}/${encodeURIComponent(post.slug)}" class="post-link">
-                                <h3>${escapeHtml(post.headline)}</h3>
-                            </a>
-                            <div class="post-meta">
-                                <span class="date">
-                                    <time datetime="${escapeHtml(post.datetime)}">${PostLoader.formatDate(post.date)}</time>
-                                </span>
-                                <span class="read-time">- ${escapeHtml(post.readTime)}</span>
-                            </div>
-                            ${post.teaser ? `<p>${escapeHtml(post.teaser)}</p>` : ''}
-                        </div>
-                    </li>
-                `).join('');
-            }
-
-            if (totalPages > 1) {
-                const paginationContainer = document.getElementById('tag-pagination');
-                let paginationHtml = '';
-                
-                const baseUrl = `?tag=${encodeURIComponent(tag)}`;
-                
-                if (currentPage > 1) {
-                    paginationHtml += `<a href="${baseUrl}&page=${currentPage - 1}" class="pagination-btn">&larr; Previous</a>`;
-                }
-                
-                paginationHtml += `<span class="pagination-info">Page ${currentPage} of ${totalPages}</span>`;
-                
-                if (currentPage < totalPages) {
-                    paginationHtml += `<a href="${baseUrl}&page=${currentPage + 1}" class="pagination-btn">Next &rarr;</a>`;
-                }
-                
-                paginationContainer.innerHTML = paginationHtml;
-            }
-        });
-    </script>
-    
-    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Back to top">
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 15l-6-6-6 6"/>
         </svg>
