@@ -5,8 +5,15 @@
     <link>https://www.markusword.de</link>
     <description>MD - Developer, Designer, Creator</description>
     <language>en</language>
-    <lastBuildDate>Fri, 20 Mar 2026 06:14:27 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 20 Mar 2026 11:39:26 GMT</lastBuildDate>
     <atom:link href="https://www.markusword.de/rss.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Where Do You Get Your Inspiration?</title>
+      <link>https://www.markusword.de/post/2026/03/where-do-you-get-your-inspiration</link>
+      <guid isPermaLink="true">https://www.markusword.de/post/2026/03/where-do-you-get-your-inspiration</guid>
+      <description><![CDATA[My brain never shuts down, even at 3 AM when I should be sleeping. But here's the thing: I love what I do, so it doesn't feel like a burden. It feels like passion. In this post I explore where inspiration actually comes from, why I built a blog from scratch, and when enough is finally enough.]]></description>
+      <pubDate>Fri, 20 Mar 2026 03:35:00 GMT</pubDate>
+    </item>
     <item>
       <title>Out for one week - Training in Linux and Virtualization</title>
       <link>https://www.markusword.de/post/2026/03/out-for-one-week-training-in-linux-and-virtualization</link>
