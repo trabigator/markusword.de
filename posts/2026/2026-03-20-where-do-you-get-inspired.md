@@ -7,9 +7,6 @@ teaser: "My brain never shuts down, even at 3 AM when I should be sleeping. But 
 tags: ["inspiration", "creativity", "passion", "steipete.me", "problem-solving", "blogging", "pareto-principle", "personal-development"]
 ---
 
----
-### 💡 Where do you get your inspiration?
-
 My brain never shuts down. Even on walks, even on vacation, even at 3 AM when I should be sleeping. It's constantly making connections, noticing patterns, thinking about problems I didn't know I cared about. That's probably unhealthy. I should probably try a digital detox sometime.
 
 But here's the thing: I genuinely love what I do. So even when my mind won't quiet down, it doesn't feel like a burden. It feels like passion.
