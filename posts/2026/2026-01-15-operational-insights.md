@@ -3,7 +3,7 @@ headline: "⚠️ Operational Insights: AI Support in an Emergency Situation"
 date: "2026-01-15"
 datetime: "2026-01-15T17:21:00Z"
 readTime: "2 min read"
-teaser: "When an emergency exercise tested our team, I realized PowerPoint wasn't cutting it. In just one hour, I built an offline tool that handled maps, entities, and real-time reports on the fly. Here's how a quick solution saved the day—and what it taught me about when \"good enough\" beats perfect."
+teaser: "When an emergency exercise tested our team, I realized PowerPoint wasn't cutting it. In just one hour, I built an offline tool that handled maps, entities, and real-time reports on the fly. Here's how a quick solution saved the day and what it taught me about when \"good enough\" beats perfect."
 tags: ["emergency", "AI", "SoftwareDevelopment", "digitalization", "automation", "workflow", "Training"]
 ---
 
