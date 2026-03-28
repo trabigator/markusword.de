@@ -86,13 +86,13 @@ function wrapText(text, maxLen) {
     for (const word of words) {
         if (line.length + word.length + 1 > maxLen) {
             if (line.length > 0) {
-                result += line + '<wbr>';
+                result += line + '&nbsp;<wbr>';
                 line = '';
             }
             if (word.length > maxLen) {
                 let pos = 0;
                 while (pos + maxLen - 1 < word.length) {
-                    result += word.slice(pos, pos + maxLen - 1) + '<wbr>';
+                    result += word.slice(pos, pos + maxLen - 1) + '&nbsp;<wbr>';
                     pos += maxLen - 1;
                 }
                 line = word.slice(pos);
