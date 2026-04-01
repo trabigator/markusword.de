@@ -190,6 +190,9 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.theme-ready #theme-btn svg {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
