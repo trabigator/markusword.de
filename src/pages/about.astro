@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="About Me - Markus Dröws"
+  description="About Markus Dröws - Cyberanalyst, OSINT specialist, and software developer building tools for law enforcement investigations."
+  canonicalUrl="https://www.markusword.de/about/"
+>
+  <Header active="about" />
+
+  <section class="page-content">
+    <h1>About Me</h1>
+    <div class="about-layout">
+      <img src="/avatar.jpeg" alt="Markus Dröws" class="about-avatar" loading="lazy">
+      <p>Hi, I'm Markus, a cyberanalyst, OSINT specialist, and investigator who also happens to write code.</p>
+      <p>What makes my work unique is the intersection of two worlds: law enforcement and software development. I use my skills in design and programming to build custom solutions that address real challenges faced by my colleagues in the field. Instead of adapting to off-the-shelf tools that weren't designed for investigative work, I create tools that actually fit the workflow.</p>
+      <p>Supporting fellow investigators is more than a responsibility — it's my driving passion. When I see a colleague struggling with a tedious process or lacking the right resources, I see an opportunity to help. That motivation led me to develop a specialized tool that was published on the Europol Tool Repository (ETR), now available to law enforcement professionals across all EU member states. Knowing that work I created is helping investigations throughout Europe is incredibly rewarding.</p>
+      <p>When I'm not navigating the digital landscape, you'll find me in my workshop, my hands in wood shavings instead of pixels. Woodworking is my way of stepping back from cyberspace, trading algorithms for grain patterns, and letting my mind rest in something tangible. There's something deeply satisfying about creating physical objects with my hands after spending so much time in virtual spaces.</p>
+    </div>
+    <h2>GitHub Activity</h2>
+    <img src="https://ghchart.rshah.org/trabigator" alt="Markus's GitHub Contribution Graph" class="w-full" style="width: 97%; height: auto; margin-top: 1.5rem" loading="lazy">
+  </section>
+
+  <div class="newsletter-section">
+    <h2>Stay connected</h2>
+    <section class="newsletter-box">
+      <p>Get notified when I publish new posts. No spam, unsubscribe anytime.</p>
+      <form action="https://buttondown.com/api/emails/embed-subscribe/markusword" method="post" target="_blank" class="newsletter-form">
+        <input type="text" name="name" placeholder="Your Name">
+        <input type="email" name="email" placeholder="Your Email" required>
+        <input type="submit" value="Subscribe">
+      </form>
+      <p class="newsletter-note">2× per month. always a perfect time to enjoy your ☕</p>
+    </section>
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0rem;
+  }
+
+  .page-content h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-content p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 1.15rem;
+    line-height: 1.7;
+  }
+
+  .about-layout {
+    display: flow-root;
+  }
+
+  .about-avatar {
+    width: 250px;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    float: left;
+    margin-right: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .newsletter-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0 0 0;
+  }
+
+  .newsletter-section h2 {
+    margin-top: 0;
+  }
+
+  .newsletter-box {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 1.5rem;
+    margin: 1rem 0 2rem 0;
+  }
+
+  .newsletter-box p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 1rem 0;
+  }
+
+  .newsletter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .newsletter-form input[type="text"],
+  .newsletter-form input[type="email"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .newsletter-form input[type="submit"] {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .newsletter-form input[type="submit"]:hover {
+    background: #1d4ed8;
+  }
+
+  .newsletter-note {
+    font-size: 0.75rem !important;
+    color: var(--text-secondary);
+    margin-top: 0.75rem !important;
+    margin-bottom: 0 !important;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+</style>

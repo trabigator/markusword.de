@@ -1,0 +1,532 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  headline: string;
+  date: string;
+  datetime: string;
+  readTime: string;
+  teaser: string;
+  tags: string[];
+  year: string;
+  month: string;
+  slug: string;
+  prevPost?: { headline: string; year: string; month: string; slug: string } | null;
+  nextPost?: { headline: string; year: string; month: string; slug: string } | null;
+}
+
+const {
+  headline,
+  date,
+  datetime,
+  readTime,
+  teaser,
+  tags,
+  year,
+  month,
+  slug,
+  prevPost,
+  nextPost
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString() || "https://www.markusword.de";
+const postUrl = `${siteUrl}post/${year}/${month}/${slug}`;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric'
+});
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": headline,
+  "datePublished": datetime,
+  "author": {
+    "@type": "Person",
+    "name": "Markus Dröws",
+    "url": `${siteUrl}about/`
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Markus Dröws"
+  },
+  "description": teaser
+};
+
+function wrapText(text: string, maxLen: number): string {
+  const words = text.split(' ');
+  let line = '';
+  let result = '';
+
+  for (const word of words) {
+    if (line.length + word.length + 1 > maxLen) {
+      if (line.length > 0) {
+        result += line + '&nbsp;<wbr>';
+        line = '';
+      }
+      if (word.length > maxLen) {
+        let pos = 0;
+        while (pos + maxLen - 1 < word.length) {
+          result += word.slice(pos, pos + maxLen - 1) + '&nbsp;<wbr>';
+          pos += maxLen - 1;
+        }
+        line = word.slice(pos);
+      } else {
+        line = word;
+      }
+    } else {
+      line += (line ? ' ' : '') + word;
+    }
+  }
+  return result + line;
+}
+---
+
+<BaseLayout
+  title={headline}
+  description={teaser}
+  ogTitle={headline}
+  ogDescription={teaser}
+  ogUrl={postUrl}
+  ogType="article"
+  canonicalUrl={postUrl}
+  jsonLd={jsonLd}
+>
+  <Header active="post" />
+
+  <article id="post-content">
+    <header class="post-header">
+      <h1 id="post-headline">{headline}</h1>
+      <div class="post-meta">
+        <span class="date">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="7" width="16" height="14" rx="2"></rect>
+            <path d="M16 3v4"></path>
+            <path d="M8 3v4"></path>
+            <path d="M4 11h16"></path>
+          </svg>
+          <time datetime={datetime}>{formattedDate}</time>
+        </span>
+        <span class="read-time">- {readTime}</span>
+      </div>
+    </header>
+    <div id="post-body" class="markdown-content">
+      <slot />
+    </div>
+  </article>
+
+  <div class="newsletter-section">
+    <h2>Stay connected</h2>
+    <section class="newsletter-box">
+      <p>Get notified when I publish new posts. No spam, unsubscribe anytime.</p>
+      <form action="https://buttondown.com/api/emails/embed-subscribe/markusword" method="post" target="_blank" class="newsletter-form">
+        <input type="text" name="name" placeholder="Your Name">
+        <input type="email" name="email" placeholder="Your Email" required>
+        <input type="submit" value="Subscribe">
+      </form>
+      <p class="newsletter-note">2× per month. always a perfect time to enjoy your ☕</p>
+    </section>
+  </div>
+
+  <div id="post-tags" class="post-tags">
+    {tags.map(tag => (
+      <a href={`/tags/${encodeURIComponent(tag)}`} class="tag">#{tag}</a>
+    ))}
+  </div>
+
+  <div class="share-section">
+    <span class="share-label">Share:</span>
+    <div class="share-buttons">
+      <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(headline)}`} class="share-btn" data-platform="x" title="Share on X" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4L20 20"></path>
+          <path d="M20 4L4 20"></path>
+        </svg>
+      </a>
+      <a href={`https://bsky.app/intent/compose?text=${encodeURIComponent(headline + '\n' + postUrl)}`} class="share-btn" data-platform="bluesky" title="Share on Bluesky" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 12c-1.5-2.5-4.5-5.5-7-7-1-.6-2-.4-2 .7 0 1.2.3 4 .6 5 .7 2.2 3 3 5.3 2.7 -2.8.5-5.2 1.7-2 5 3.5 3.6 4.6-.7 5.1-2.7 .5 2 1.6 6.3 5.1 2.7 3.2-3.3.8-4.5-2-5 2.3.3 4.6-.5 5.3-2.7.3-1 .6-3.8.6-5 0-1.1-1-1.3-2-.7-2.5 1.5-5.5 4.5-7 7z" />
+        </svg>
+      </a>
+      <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`} class="share-btn" data-platform="linkedin" title="Share on LinkedIn" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="4" />
+          <path d="M8 11v5"></path>
+          <path d="M8 8v.01"></path>
+          <path d="M12 16v-5"></path>
+          <path d="M16 16v-3a2 2 0 1 0-4 0"></path>
+        </svg>
+      </a>
+      <a href={`https://wa.me/?text=${encodeURIComponent(headline + '\n' + postUrl)}`} class="share-btn" data-platform="whatsapp" title="Share on WhatsApp" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+        </svg>
+      </a>
+      <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`} class="share-btn" data-platform="facebook" title="Share on Facebook" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+        </svg>
+      </a>
+      <a href={`https://t.me/share/url?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(headline)}`} class="share-btn" data-platform="telegram" title="Share on Telegram" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2.5L2 10.5l7 2.5m12.5-10.5L11 14l-3 8.5"></path>
+        </svg>
+      </a>
+      <a href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(postUrl)}&description=${encodeURIComponent(headline)}`} class="share-btn" data-platform="pinterest" title="Share on Pinterest" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 6v12"></path>
+          <path d="M8 16l4-8 4 8"></path>
+        </svg>
+      </a>
+      <a href={`mailto:?subject=${encodeURIComponent(headline)}&body=${encodeURIComponent(postUrl)}`} class="share-btn" data-platform="email" title="Share via Email">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="24" height="18" rx="2"></rect>
+          <path d="M3 8l12 8 12-8"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  {(prevPost || nextPost) && (
+    <div class="post-nav-links">
+      {nextPost && (
+        <a href={`/post/${nextPost.year}/${nextPost.month}/${nextPost.slug}`} class="post-nav-link" title={nextPost.headline}>
+          <div>
+            <span class="post-nav-label">Next Post</span>
+            <span class="post-nav-title" set:html={wrapText(nextPost.headline, 30)}></span>
+          </div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      )}
+      {prevPost && (
+        <a href={`/post/${prevPost.year}/${prevPost.month}/${prevPost.slug}`} class="post-nav-link" title={prevPost.headline}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          <div>
+            <span class="post-nav-label">Previous Post</span>
+            <span class="post-nav-title" set:html={wrapText(prevPost.headline, 30)}></span>
+          </div>
+        </a>
+      )}
+    </div>
+  )}
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .post-header {
+    margin-bottom: 2em;
+  }
+
+  .post-header h1 {
+    margin-bottom: 0.5em;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .post-meta .date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.8;
+  }
+
+  .post-meta svg {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+  }
+
+  .post-meta time {
+    font-size: 0.875rem;
+    font-style: italic;
+  }
+
+  .read-time {
+    font-size: 0.875rem;
+    font-style: italic;
+    opacity: 0.8;
+  }
+
+  .markdown-content {
+    line-height: 1.7;
+    font-size: 1.2rem;
+  }
+
+  .markdown-content h1,
+  .markdown-content h2,
+  .markdown-content h3,
+  .markdown-content h4,
+  .markdown-content h5,
+  .markdown-content h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .markdown-content p {
+    margin-bottom: 1em;
+  }
+
+  .markdown-content strong {
+    font-weight: 700;
+  }
+
+  .markdown-content em {
+    font-style: italic;
+  }
+
+  .markdown-content u {
+    text-decoration: underline;
+  }
+
+  .markdown-content a {
+    color: var(--link);
+  }
+
+  .markdown-content a:hover {
+    text-decoration: underline;
+  }
+
+  .markdown-content code {
+    font-family: 'Fira Code', monospace;
+    background: var(--bg-secondary);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .markdown-content pre {
+    background: var(--bg-secondary);
+    padding: 1em;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1em 0;
+  }
+
+  .markdown-content pre code {
+    background: none;
+    padding: 0;
+  }
+
+  .markdown-content blockquote {
+    border-left: 4px solid var(--border);
+    padding-left: 1.5em;
+    margin: 2.5em 0 2.5em 2.5em;
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .markdown-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1em 0;
+  }
+
+  .markdown-content ul,
+  .markdown-content ol {
+    padding-left: 1.5em;
+    margin: 1em 0;
+  }
+
+  .markdown-content ul {
+    list-style: disc;
+  }
+
+  .markdown-content ul ul {
+    list-style: circle;
+  }
+
+  .markdown-content ol {
+    list-style: decimal;
+  }
+
+  .markdown-content li {
+    margin-bottom: 0.5em;
+  }
+
+  .markdown-content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2em 0;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 1.5rem;
+    border-top: 1px dotted var(--border);
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 1.2em;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .tag:hover {
+    color: var(--accent);
+    text-decoration: underline dashed;
+    text-underline-offset: 8px;
+  }
+
+  .share-section {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .share-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .share-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    transition: background-color 0.2s, color 0.2s;
+    text-decoration: none;
+  }
+
+  .share-btn:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .post-nav-links {
+    display: flex;
+    gap: 8px;
+    margin-top: 2rem;
+  }
+
+  .post-nav-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+
+  .post-nav-link:hover .post-nav-title {
+    color: var(--accent);
+  }
+
+  .post-nav-link svg {
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .post-nav-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: right;
+  }
+
+  .post-nav-link:hover .post-nav-label {
+    color: var(--text-secondary);
+  }
+
+  .post-nav-title {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    max-width: 200px;
+    text-align: right;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .newsletter-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0 0 0;
+  }
+
+  .newsletter-section h2 {
+    margin-top: 0;
+  }
+
+  .newsletter-box {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem 1.5rem;
+    margin: 1rem 0 2rem 0;
+  }
+
+  .newsletter-box p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin: 1rem 0;
+  }
+
+  .newsletter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .newsletter-form input[type="text"],
+  .newsletter-form input[type="email"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .newsletter-form input[type="submit"] {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .newsletter-form input[type="submit"]:hover {
+    background: #1d4ed8;
+  }
+</style>

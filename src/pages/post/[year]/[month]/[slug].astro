@@ -1,0 +1,74 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  
+  const allPosts = posts.sort((a, b) => 
+    new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  );
+
+  return posts.map(post => {
+    const id = post.id;
+    const urlParts = id.split('/');
+    const year = urlParts[0];
+    const month = urlParts[1];
+    const slug = urlParts.slice(2).join('/').replace(/\.mdx?$/, '');
+
+    const currentIndex = allPosts.findIndex(p => p.id === post.id);
+    const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+    const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
+    return {
+      params: { year, month, slug },
+      props: {
+        post,
+        prevPost: prevPost ? {
+          headline: prevPost.data.headline,
+          id: prevPost.id
+        } : null,
+        nextPost: nextPost ? {
+          headline: nextPost.data.headline,
+          id: nextPost.id
+        } : null
+      }
+    };
+  });
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await render(post);
+
+const id = post.id;
+const urlParts = id.split('/');
+const year = urlParts[0];
+const month = urlParts[1];
+const slug = urlParts.slice(2).join('/').replace(/\.mdx?$/, '');
+---
+
+<PostLayout
+  headline={post.data.headline}
+  date={post.data.date}
+  datetime={post.data.datetime}
+  readTime={post.data.readTime}
+  teaser={post.data.teaser}
+  tags={post.data.tags}
+  year={year}
+  month={month}
+  slug={slug}
+  prevPost={prevPost ? {
+    headline: prevPost.headline,
+    year: prevPost.id.split('/')[0],
+    month: prevPost.id.split('/')[1],
+    slug: prevPost.id.split('/').slice(2).join('/').replace(/\.mdx?$/, '')
+  } : null}
+  nextPost={nextPost ? {
+    headline: nextPost.headline,
+    year: nextPost.id.split('/')[0],
+    month: nextPost.id.split('/')[1],
+    slug: nextPost.id.split('/').slice(2).join('/').replace(/\.mdx?$/, '')
+  } : null}
+>
+  <Content />
+</PostLayout>

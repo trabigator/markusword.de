@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="Imprint - Markus Dröws"
+  description="Imprint — Markus Dröws"
+  canonicalUrl="https://www.markusword.de/imprint/"
+>
+  <Header active="imprint" />
+
+  <section class="page-content">
+    <h1>Imprint</h1>
+
+    <h2>Information pursuant to § 5 DDG</h2>
+
+    <p>
+      Markus Dröws<br>
+      Nestmannstrasse 6<br>
+      07546 Gera<br>
+      Germany
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      E-mail: <a href="mailto:markusword.de@proton.me">markusword.de@proton.me</a>
+    </p>
+
+    <h2>Responsible for Content</h2>
+    <p>Markus Dröws</p>
+
+    <h2>Dispute Resolution</h2>
+    <p>
+      The European Commission provides a platform for online dispute resolution (ODR):
+      <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a>.
+    </p>
+    <p>
+      We are not willing or obliged to participate in dispute resolution proceedings
+      before a consumer arbitration board.
+    </p>
+
+    <h2>Disclaimer</h2>
+    <p>
+      The content of this website is provided for general informational purposes only.
+      As the sole author, we are responsible for all blog posts and written content published here.
+      All blog posts and documentation are licensed under
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>
+      unless otherwise noted. All code and scripts are licensed under the MIT License.
+      See the full license text at <a href="/LICENSE">/LICENSE</a>.
+    </p>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0rem;
+  }
+
+  .page-content h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-content h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-content p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+    font-size: 1.15rem;
+    line-height: 1.7;
+  }
+
+  .page-content a {
+    color: var(--accent);
+  }
+
+  .page-content a:hover {
+    text-decoration: underline;
+  }
+</style>

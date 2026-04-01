@@ -1,0 +1,133 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogUrl?: string;
+  ogType?: string;
+  canonicalUrl?: string;
+  jsonLd?: object;
+}
+
+const {
+  title,
+  description = "Markus Dröws - Cyberanalyst, OSINT Specialist, Software Developer",
+  ogTitle,
+  ogDescription,
+  ogUrl = Astro.site,
+  ogType = "website",
+  canonicalUrl,
+  jsonLd
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString() || "https://www.markusword.de";
+const canonical = canonicalUrl || new URL(Astro.url.pathname, siteUrl).toString();
+const finalOgTitle = ogTitle || title;
+const finalOgDescription = ogDescription || description;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>(function(){var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.setAttribute("data-theme","dark");}})();</script>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://buttondown.com;">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <link rel="canonical" href={canonical}>
+    <meta property="og:site_name" content="Markus Dröws">
+    <meta property="og:type" content={ogType}>
+    <meta property="og:url" content={ogUrl}>
+    <meta property="og:title" content={finalOgTitle}>
+    <meta property="og:description" content={finalOgDescription}>
+    <meta property="og:image" content={`${siteUrl}avatar.jpeg`}>
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@trabigator">
+    <meta name="twitter:creator" content="@trabigator">
+    <meta name="twitter:title" content={finalOgTitle}>
+    <meta name="twitter:description" content={finalOgDescription}>
+    <meta name="twitter:image" content={`${siteUrl}avatar.jpeg`}>
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/global.css">
+    <style>
+        h1, h2 { font-family: 'Fira Code', monospace; }
+        body, h3, h4, h5, h6, p, a, li { font-family: 'Nunito', sans-serif; }
+    </style>
+</head>
+<body>
+    <header></header>
+
+    <main id="main-content">
+        <slot />
+    </main>
+
+    <footer></footer>
+
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top" style="display: none;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
+    <script>
+        const backToTop = document.getElementById('back-to-top');
+        if (backToTop) {
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            window.addEventListener('scroll', () => {
+                backToTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
+            });
+        }
+
+        const backLink = document.getElementById('back-link');
+        if (backLink) {
+            backLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (history.length > 1) {
+                    history.back();
+                } else {
+                    window.location.href = '/';
+                }
+            });
+        }
+
+        const menuBtn = document.querySelector('#menu-btn');
+        const menuItems = document.querySelector('#menu-items');
+        const menuIcon = document.querySelector('#menu-icon');
+        const closeIcon = document.querySelector('#close-icon');
+
+        if (menuBtn && menuItems && menuIcon && closeIcon) {
+            menuBtn.addEventListener('click', () => {
+                const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+                menuBtn.setAttribute('aria-expanded', String(!isExpanded));
+                menuItems.classList.toggle('hidden');
+                menuIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+        }
+
+        const themeBtn = document.querySelector('#theme-btn');
+        const html = document.documentElement;
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                if (newTheme === 'dark') {
+                    html.setAttribute('data-theme', 'dark');
+                } else {
+                    html.removeAttribute('data-theme');
+                }
+                localStorage.setItem('theme', newTheme);
+            });
+        }
+    </script>
+</body>
+</html>

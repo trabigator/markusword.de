@@ -1,0 +1,204 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+}
+---
+
+<BaseLayout
+  title="Search - Markus Dröws"
+  description="Search posts on Markus Dröws"
+>
+  <Header active="search" />
+
+  <div class="search-page">
+    <h1>Search</h1>
+    
+    <div class="search-form">
+      <input type="text" id="search-input" placeholder="Search posts..." aria-label="Search posts">
+    </div>
+
+    <ul id="search-results"></ul>
+    <p id="search-empty" class="hidden">No posts found matching your search.</p>
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<script define:vars={{ posts: sortedPosts, formatDate }}>
+  const searchInput = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('search-results');
+  const emptyMessage = document.getElementById('search-empty');
+
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function renderResults(filteredPosts) {
+    if (!filteredPosts.length) {
+      resultsContainer.innerHTML = '';
+      emptyMessage.classList.remove('hidden');
+      return;
+    }
+    emptyMessage.classList.add('hidden');
+
+    resultsContainer.innerHTML = filteredPosts.map(post => {
+      const urlParts = post.id.split('/');
+      const year = urlParts[0];
+      const month = urlParts[1];
+      const slug = urlParts.slice(2).join('/');
+      return `
+        <li>
+          <div class="post-item">
+            <a href="/post/${year}/${month}/${slug}" class="post-link">
+              <h3>${escapeHtml(post.data.headline)}</h3>
+            </a>
+            <div class="post-meta">
+              <span class="date">
+                <time datetime="${escapeHtml(post.data.datetime)}">${formatDate(post.data.date)}</time>
+              </span>
+              <span class="read-time">- ${escapeHtml(post.data.readTime)}</span>
+            </div>
+            <p>${escapeHtml(post.data.teaser || '')}</p>
+          </div>
+        </li>
+      `;
+    }).join('');
+  }
+
+  function filterPosts(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    const qYear = q.match(/^(\d{4})$/);
+    return posts.filter(post =>
+      post.data.headline.toLowerCase().includes(q) ||
+      (post.data.teaser && post.data.teaser.toLowerCase().includes(q)) ||
+      (post.data.content && post.data.content.toLowerCase().includes(q)) ||
+      post.data.date.toLowerCase().includes(q) ||
+      (post.data.tags && post.data.tags.some(tag => tag.toLowerCase().includes(q))) ||
+      (qYear && post.id.startsWith(qYear))
+    );
+  }
+
+  searchInput.addEventListener('input', (e) => {
+    const filtered = filterPosts(e.target.value);
+    renderResults(filtered);
+  });
+
+  renderResults([]);
+</script>
+
+<style>
+  .search-page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0rem;
+  }
+
+  .search-page h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .search-form {
+    margin-bottom: 2rem;
+  }
+
+  .search-form input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-form input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  #search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  #search-empty {
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .post-item h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: dashed;
+    text-underline-offset: 4px;
+  }
+
+  .post-link {
+    display: inline-block;
+    text-decoration: dashed;
+  }
+
+  .post-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .post-meta .date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.8;
+  }
+
+  .post-meta time {
+    font-size: 0.875rem;
+    font-style: italic;
+  }
+
+  .read-time {
+    font-size: 0.875rem;
+    font-style: italic;
+    opacity: 0.8;
+  }
+
+  .post-item > p {
+    opacity: 0.8;
+  }
+</style>

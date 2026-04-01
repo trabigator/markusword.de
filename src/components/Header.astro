@@ -1,0 +1,209 @@
+---
+interface Props {
+  active?: 'home' | 'posts' | 'about' | 'search' | 'tags' | 'imprint' | 'post';
+}
+
+const { active = 'home' } = Astro.props;
+---
+
+<a id="skip-to-content" href="#main-content">Skip to content</a>
+<div id="nav-container">
+    <div id="top-nav-wrap">
+        <a href="/" class="site-title">Markus Dröws</a>
+        <nav id="nav-menu">
+            <button id="menu-btn" aria-label="Open Menu" aria-expanded="false" aria-controls="menu-items">
+                <svg class="icon" id="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 6h16"></path>
+                    <path d="M7 12h13"></path>
+                    <path d="M10 18h10"></path>
+                </svg>
+                <svg class="icon hidden" id="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6l-12 12"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            </button>
+            <ul id="menu-items" class="hidden">
+                <li><a href="/posts/" class={active === 'posts' ? 'active' : ''}>Posts</a></li>
+                <li><a href="/about/" class={active === 'about' ? 'active' : ''}>About</a></li>
+                <li>
+                    <a href="/search/" class:list={['icon-btn', { active: active === 'search' }]} aria-label="search" title="Search">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="M16.65 16.65L21 21"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li>
+                    <button id="theme-btn" class="icon-btn" title="Toggles light &amp; dark" aria-label="auto" aria-live="polite">
+                        <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+                        </svg>
+                        <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <path d="M12 1v2"></path>
+                            <path d="M12 21v2"></path>
+                            <path d="M4.22 4.22l1.42 1.42"></path>
+                            <path d="M18.36 18.36l1.42 1.42"></path>
+                            <path d="M1 12h2"></path>
+                            <path d="M21 12h2"></path>
+                            <path d="M4.22 19.78l1.42-1.42"></path>
+                            <path d="M18.36 5.64l1.42-1.42"></path>
+                        </svg>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<div class="divider"></div>
+
+<style>
+    #nav-container {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    #top-nav-wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 16px 0;
+    }
+
+    .site-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        white-space: nowrap;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    #nav-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #menu-btn {
+        display: none;
+        padding: 8px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+    }
+
+    #menu-items {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+
+    #menu-items li a,
+    #menu-items li button {
+        padding: 4px 8px;
+        font-weight: 500;
+        transition: color 0.2s;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+        font: inherit;
+    }
+
+    #menu-items li a:hover,
+    #menu-items li button:hover {
+        color: var(--accent);
+    }
+
+    #menu-items li a.active {
+        text-decoration: underline dashed var(--accent);
+        text-underline-offset: 8px;
+    }
+
+    .icon-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    @media (min-width: 641px) {
+        #menu-items {
+            display: flex !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        #menu-btn {
+            display: block;
+            align-self: flex-end;
+        }
+
+        #menu-items {
+            display: none;
+            flex-direction: column;
+            width: 176px;
+            margin-top: 16px;
+            gap: 8px;
+        }
+
+        #menu-items:not(.hidden) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        #menu-items li a {
+            display: block;
+            text-align: center;
+            padding: 12px;
+        }
+
+        #menu-items li .icon-btn {
+            padding: 12px;
+        }
+    }
+
+    #theme-btn {
+        position: relative;
+        width: 48px;
+        height: 48px;
+        transition: background-color 0.3s ease;
+    }
+
+    #theme-btn svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .sun-icon {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+
+    .moon-icon {
+        opacity: 0;
+        transform: scale(0) rotate(-90deg);
+    }
+
+    [data-theme="dark"] .sun-icon {
+        opacity: 0;
+        transform: scale(0) rotate(90deg);
+    }
+
+    [data-theme="dark"] .moon-icon {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+
+    .divider {
+        max-width: 860px;
+        margin: 0 auto;
+        border: 0;
+        border-top: 1px solid var(--border);
+    }
+</style>

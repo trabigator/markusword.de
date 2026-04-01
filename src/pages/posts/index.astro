@@ -1,0 +1,180 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+const allPosts = await getCollection('posts');
+const sortedPosts = allPosts.sort((a, b) => 
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+
+function groupPostsByYearMonth(posts: typeof sortedPosts) {
+  const groups: Record<string, Record<string, typeof posts>> = {};
+  
+  for (const post of posts) {
+    const date = new Date(post.data.date);
+    const year = date.getFullYear().toString();
+    const monthIndex = date.getMonth();
+    const monthName = monthNames[monthIndex];
+    
+    if (!groups[year]) {
+      groups[year] = {};
+    }
+    if (!groups[year][monthName]) {
+      groups[year][monthName] = [];
+    }
+    groups[year][monthName].push(post);
+  }
+  
+  return groups;
+}
+
+const grouped = groupPostsByYearMonth(sortedPosts);
+const sortedYears = Object.keys(grouped).sort((a, b) => parseInt(b) - parseInt(a));
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+}
+---
+
+<BaseLayout
+  title="All Posts - Markus Dröws"
+  description="Archive of all posts by Markus Dröws"
+>
+  <Header active="posts" />
+
+  <div id="all-posts">
+    <h1>All Posts</h1>
+
+    {sortedYears.map(year => (
+      <div class="year-group">
+        <h2 class="year-header">{year} <span class="year-count">{grouped[year] ? Object.values(grouped[year]).flat().length : 0}</span></h2>
+        
+        {Object.entries(grouped[year]).sort(([,a], [,b]) => {
+          const monthA = monthNames.indexOf(Object.keys(a)[0]);
+          const monthB = monthNames.indexOf(Object.keys(b)[0]);
+          return monthB - monthA;
+        }).map(([monthName, monthPosts]) => (
+          <div class="month-group">
+            <h3 class="month-header">{monthName} <span class="month-count">{monthPosts.length}</span></h3>
+            <ul class="month-posts">
+              {monthPosts.map(post => {
+                const urlParts = post.id.split('/');
+                const postYear = urlParts[0];
+                const postMonth = urlParts[1];
+                const slug = urlParts.slice(2).join('/');
+                return (
+                  <li>
+                    <a href={`/post/${postYear}/${postMonth}/${slug}`} class="post-link">
+                      <h3>{post.data.headline}</h3>
+                    </a>
+                    <div class="post-meta">
+                      <span class="date">{formatDate(post.data.date)}</span>
+                      <span class="read-time">- {post.data.readTime}</span>
+                    </div>
+                    {post.data.teaser && <p>{post.data.teaser}</p>}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  #all-posts {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0rem;
+  }
+
+  #all-posts h1 {
+    margin-bottom: 2rem;
+  }
+
+  #all-posts ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .year-group {
+    margin-bottom: 2.5rem;
+  }
+
+  .year-header {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .year-count {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: normal;
+  }
+
+  .month-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .month-header {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .month-posts {
+    list-style: none;
+    padding: 0;
+  }
+
+  .month-posts li {
+    margin-bottom: 1.5rem;
+  }
+
+  .month-posts .post-link h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    transition: color 0.2s;
+    color: var(--accent);
+    text-decoration: dashed;
+  }
+
+  .month-posts .post-link:hover h3 {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+
+  .month-posts .post-meta {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .month-posts .post-meta .read-time {
+    margin-left: 0.5rem;
+  }
+
+  .month-posts p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+</style>

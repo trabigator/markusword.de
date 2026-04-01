@@ -1,0 +1,175 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  
+  const tagMap = new Map<string, typeof allPosts>();
+  
+  for (const post of allPosts) {
+    for (const tag of post.data.tags) {
+      if (!tagMap.has(tag)) {
+        tagMap.set(tag, []);
+      }
+      tagMap.get(tag)!.push(post);
+    }
+  }
+
+  return Array.from(tagMap.keys()).map(tag => ({
+    params: { tag },
+    props: { 
+      tag,
+      posts: tagMap.get(tag)!.sort((a, b) => 
+        new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+      )
+    }
+  }));
+}
+
+const { tag, posts } = Astro.props;
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+}
+---
+
+<BaseLayout
+  title={`Tag: ${tag} - Markus Dröws`}
+  description={`All posts tagged with ${tag}`}
+>
+  <Header active="tags" />
+
+  <div class="tags-page">
+    <h1>Tag: {tag}</h1>
+    <p class="tag-description">All the articles with the tag "{tag}".</p>
+
+    <ul class="tag-posts">
+      {posts.length === 0 ? (
+        <li class="no-posts">No posts found with this tag.</li>
+      ) : (
+        posts.map(post => {
+          const urlParts = post.id.split('/');
+          const year = urlParts[0];
+          const month = urlParts[1];
+          const slug = urlParts.slice(2).join('/');
+          return (
+            <li>
+              <div class="post-item">
+                <a href={`/post/${year}/${month}/${slug}`} class="post-link">
+                  <h3>{post.data.headline}</h3>
+                </a>
+                <div class="post-meta">
+                  <span class="date">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="7" width="16" height="14" rx="2"></rect>
+                      <path d="M16 3v4"></path>
+                      <path d="M8 3v4"></path>
+                      <path d="M4 11h16"></path>
+                    </svg>
+                    <time datetime={post.data.datetime}>{formatDate(post.data.date)}</time>
+                  </span>
+                  <span class="read-time">- {post.data.readTime}</span>
+                </div>
+                {post.data.teaser && <p>{post.data.teaser}</p>}
+              </div>
+            </li>
+          );
+        })
+      )}
+    </ul>
+  </div>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .tags-page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 0rem;
+  }
+
+  .tags-page h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .tag-description {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+
+  .tag-posts {
+    list-style: none;
+    padding: 0;
+  }
+
+  .tag-posts li {
+    margin-bottom: 2rem;
+  }
+
+  .tag-posts .no-posts {
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .post-item h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: dashed;
+    text-underline-offset: 4px;
+  }
+
+  .post-link {
+    display: inline-block;
+    text-decoration: dashed;
+  }
+
+  .post-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .post-meta .date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.8;
+  }
+
+  .post-meta svg {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+  }
+
+  .post-meta time {
+    font-size: 0.875rem;
+    font-style: italic;
+  }
+
+  .read-time {
+    font-size: 0.875rem;
+    font-style: italic;
+    opacity: 0.8;
+  }
+
+  .post-item > p {
+    opacity: 0.8;
+  }
+</style>
