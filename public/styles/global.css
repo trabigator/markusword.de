@@ -196,24 +196,24 @@ button {
     transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.sun-icon {
-    opacity: 0;
-    transform: scale(0) rotate(-90deg);
+#theme-btn .sun-icon {
+    opacity: 0 !important;
+    transform: scale(0) rotate(-90deg) !important;
 }
 
-.moon-icon {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
+#theme-btn .moon-icon {
+    opacity: 1 !important;
+    transform: scale(1) rotate(0deg) !important;
 }
 
-[data-theme="dark"] .sun-icon {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
+[data-theme="dark"] #theme-btn .sun-icon {
+    opacity: 1 !important;
+    transform: scale(1) rotate(0deg) !important;
 }
 
-[data-theme="dark"] .moon-icon {
-    opacity: 0;
-    transform: scale(0) rotate(90deg);
+[data-theme="dark"] #theme-btn .moon-icon {
+    opacity: 0 !important;
+    transform: scale(0) rotate(90deg) !important;
 }
 
 .divider {
