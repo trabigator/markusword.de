@@ -8,12 +8,6 @@ const allPosts = await getCollection('posts');
 const sortedPosts = allPosts.sort((a, b) => 
   new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
-
-function formatDate(dateStr: string): string {
-  const date = new Date(dateStr);
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
-}
 ---
 
 <BaseLayout
@@ -36,10 +30,16 @@ function formatDate(dateStr: string): string {
   <Footer />
 </BaseLayout>
 
-<script define:vars={{ posts: sortedPosts, formatDate }}>
+<script define:vars={{ posts: sortedPosts }}>
   const searchInput = document.getElementById('search-input');
   const resultsContainer = document.getElementById('search-results');
   const emptyMessage = document.getElementById('search-empty');
+
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`;
+  }
 
   function escapeHtml(str) {
     if (typeof str !== 'string') return '';
@@ -49,6 +49,33 @@ function formatDate(dateStr: string): string {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function fuzzyMatch(text, query) {
+    if (!text || !query) return false;
+    const t = text.toLowerCase();
+    const q = query.toLowerCase().trim();
+    if (t.includes(q)) return true;
+    const words = t.split(/\s+/);
+    return words.some(word => word.includes(q));
+  }
+
+  function fuzzyScore(text, query) {
+    if (!text || !query) return 0;
+    const t = text.toLowerCase();
+    const q = query.toLowerCase().trim();
+    if (t === q) return 100;
+    if (t.includes(q)) return 80;
+    const words = t.split(/\s+/);
+    let bestWordScore = 0;
+    for (const word of words) {
+      if (word.includes(q)) {
+        bestWordScore = Math.max(bestWordScore, 60);
+        if (word.startsWith(q)) bestWordScore = 70;
+        if (word === q) bestWordScore = 80;
+      }
+    }
+    return bestWordScore;
   }
 
   function renderResults(filteredPosts) {
@@ -87,14 +114,21 @@ function formatDate(dateStr: string): string {
     const q = query.toLowerCase().trim();
     if (!q) return [];
     const qYear = q.match(/^(\d{4})$/);
-    return posts.filter(post =>
-      post.data.headline.toLowerCase().includes(q) ||
-      (post.data.teaser && post.data.teaser.toLowerCase().includes(q)) ||
-      (post.data.content && post.data.content.toLowerCase().includes(q)) ||
-      post.data.date.toLowerCase().includes(q) ||
-      (post.data.tags && post.data.tags.some(tag => tag.toLowerCase().includes(q))) ||
-      (qYear && post.id.startsWith(qYear))
-    );
+    const scored = posts.map(post => {
+      let score = 0;
+      score = Math.max(score, fuzzyScore(post.data.headline, q) * 10);
+      score = Math.max(score, fuzzyScore(post.data.teaser, q) * 5);
+      score = Math.max(score, fuzzyScore(post.data.date, q) * 2);
+      if (post.data.tags) {
+        post.data.tags.forEach(tag => {
+          score = Math.max(score, fuzzyScore(tag, q) * 3);
+        });
+      }
+      if (qYear && post.id.startsWith(qYear)) score = Math.max(score, 50);
+      return { post, score };
+    }).filter(item => item.score > 0);
+    scored.sort((a, b) => b.score - a.score);
+    return scored.map(item => item.post);
   }
 
   searchInput.addEventListener('input', (e) => {

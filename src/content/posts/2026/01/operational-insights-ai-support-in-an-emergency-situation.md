@@ -1,5 +1,5 @@
 ---
-headline: "⚠️ Operational Insights: AI Support in an Emergency Situation"
+headline: "Operational Insights: AI Support in an Emergency Situation"
 date: "2026-01-15"
 datetime: "2026-01-15T17:21:00Z"
 readTime: "2 min read"
