@@ -194,21 +194,21 @@ function wrapText(text: string, maxLen: number): string {
 
   {(prevPost || nextPost) && (
     <div class="post-nav-links">
-      {prevPost && (
-        <a href={`/post/${prevPost.year}/${prevPost.month}/${prevPost.slug}`} class="post-nav-link" title={prevPost.headline}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          <div>
-            <span class="post-nav-label">Previous Post</span>
-            <span class="post-nav-title" set:html={wrapText(prevPost.headline, 30)}></span>
-          </div>
-        </a>
-      )}
       {nextPost && (
         <a href={`/post/${nextPost.year}/${nextPost.month}/${nextPost.slug}`} class="post-nav-link" title={nextPost.headline} style="text-align: left;">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
           <div>
             <span class="post-nav-label">Next Post</span>
             <span class="post-nav-title" set:html={wrapText(nextPost.headline, 30)}></span>
+          </div>
+        </a>
+      )}
+      {prevPost && (
+        <a href={`/post/${prevPost.year}/${prevPost.month}/${prevPost.slug}`} class="post-nav-link" title={prevPost.headline}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          <div>
+            <span class="post-nav-label">Previous Post</span>
+            <span class="post-nav-title" set:html={wrapText(prevPost.headline, 30)}></span>
           </div>
         </a>
       )}
