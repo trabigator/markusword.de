@@ -192,17 +192,16 @@ function wrapText(text: string, maxLen: number): string {
     </div>
   </div>
 
-  {(prevPost || nextPost) && (
+  <div class="post-nav-row">
+    <a href="/post" id="back-link" class="back-link">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5"></path>
+        <path d="M11 6L5 12"></path>
+        <path d="M11 18L5 12"></path>
+      </svg>
+      Back
+    </a>
     <div class="post-nav-links">
-      {nextPost && (
-        <a href={`/post/${nextPost.year}/${nextPost.month}/${nextPost.slug}`} class="post-nav-link" title={nextPost.headline} style="text-align: left;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-          <div>
-            <span class="post-nav-label">Next Post</span>
-            <span class="post-nav-title" set:html={wrapText(nextPost.headline, 30)}></span>
-          </div>
-        </a>
-      )}
       {prevPost && (
         <a href={`/post/${prevPost.year}/${prevPost.month}/${prevPost.slug}`} class="post-nav-link" title={prevPost.headline}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
@@ -212,8 +211,17 @@ function wrapText(text: string, maxLen: number): string {
           </div>
         </a>
       )}
+      {nextPost && (
+        <a href={`/post/${nextPost.year}/${nextPost.month}/${nextPost.slug}`} class="post-nav-link" title={nextPost.headline}>
+          <div style="text-align: left;">
+            <span class="post-nav-label">Next Post</span>
+            <span class="post-nav-title" set:html={wrapText(nextPost.headline, 30)}></span>
+          </div>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      )}
     </div>
-  )}
+  </div>
 
   <Footer />
 </BaseLayout>
@@ -421,11 +429,32 @@ function wrapText(text: string, maxLen: number): string {
     color: white;
   }
 
-  .post-nav-links {
+  .post-nav-row {
     display: flex;
     justify-content: space-between;
-    gap: 8px;
+    align-items: center;
     margin-top: 2rem;
+  }
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .post-nav-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
   }
 
   .post-nav-link {
