@@ -183,26 +183,6 @@ const { active = 'home' } = Astro.props;
         transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    .sun-icon {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-    }
-
-    .moon-icon {
-        opacity: 0;
-        transform: scale(0) rotate(-90deg);
-    }
-
-    :global([data-theme="dark"]) .sun-icon {
-        opacity: 0;
-        transform: scale(0) rotate(90deg);
-    }
-
-    :global([data-theme="dark"]) .moon-icon {
-        opacity: 1;
-        transform: scale(1) rotate(0deg);
-    }
-
     .divider {
         max-width: 860px;
         margin: 0 auto;
