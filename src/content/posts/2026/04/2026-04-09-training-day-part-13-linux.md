@@ -9,7 +9,7 @@ tags: ["Linux", "OPSEC", "OSINT", "documentation", "virtualization"]
 
 ### Sorry..
 
-I won't pretend the teaser isn't catchy clickbait. Nowadays it has to be catchy for people to read further. So here I will tell you how I am planning a training for my team in using AI and Linux Environments to improve their workflows and make them aware of the possibilities of current LLMs. I will share my approach to teach skilled investigators and technology enthusiasts in Claude Code / OpenCode, Agent harnesses and what my experience with AI and using Linux as my daily-driver taught me in real investigations and time critical situations. And of course I know that becoming experts in AI and Linux is not going to be done in one day - but somewhere we have to start.
+I won't pretend the teaser isn't catchy clickbait. Nowadays it has to be catchy for people to read further. So here I will tell you how I am planning a training for my team in using AI and Linux Environments to improve their workflows and make them aware of the possibilities of current LLMs. I will share my approach to teach skilled investigators and technology enthusiasts in Claude Code, OpenCode & Pi, Agent harnesses and what my experience with AI and using Linux as my daily-driver taught me in real investigations and time critical situations. And of course I know that becoming experts in AI and Linux is not going to be done in one day - but somewhere we have to start.
 
 ### Disclaimer
 
