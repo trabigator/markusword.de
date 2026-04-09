@@ -1,5 +1,5 @@
 ---
-headline: "Training Day - Linux - Part 1/3"
+headline: "Training Day Part 1/3 - Linux"
 date: "2026-04-09"
 datetime: "2026-04-09T17:00:00Z"
 readTime: "6 min read"
@@ -46,4 +46,4 @@ OPSEC extends far beyond network configuration. It includes how we store credent
 
 Linux offers great tools and it is easy to use once you are getting to know it better. In the workshop we will setup a machine that is specifically modified to meet our needs for our types of investigations. I know that there are pre-built Linux distros out there but they are usually already too "powerful" and overwhelming for a newbie.
 
-If you enjoyed reading the first part of my article and you want to know more, click here for the next part (Training Day Part 2/3 - AI)
+If you enjoyed reading the first part of my article and you want to know more, click here for the next part ([Training Day Part 2/3 - AI](https://www.markusword.de/post/2026/04/2026-04-09-training-day-part-23-ai))
