@@ -74,3 +74,5 @@ Software engineering discipline matters even when AI assists. Version control yo
 A hammer does not make you a carpenter, but it makes a carpenter much faster. AI makes investigators more productive, but only if they maintain the foundational skills that make their work defensible.
 
 The right tool for the right job: You don't bring a precision instrument to a construction site, nor a sledgehammer to fine woodworking. AI is a powerful enabler, but it amplifies the methodology behind it. Without solid investigative discipline, AI simply helps you build the wrong thing faster.
+
+To read the last part of this series, please click here [Training Day Part 3/3 - OSINT](https://www.markusword.de/post/2026/04/2026-04-09-training-day-part-33-osint)
