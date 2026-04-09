@@ -6,7 +6,7 @@ import Footer from '../../components/Footer.astro';
 
 const allPosts = await getCollection('posts');
 const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+  new Date(b.data.datetime).getTime() - new Date(a.data.datetime).getTime()
 );
 
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
